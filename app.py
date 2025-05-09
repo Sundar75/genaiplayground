@@ -13,45 +13,52 @@ with st.sidebar:
 
     complexity_multiplier = {
         "Simple": 45,
-        "Moderate": 60,
-        "Complex": 90
+        "Moderate": 75,
+        "Complex": 120
     }
     function_dev_time = complexity_multiplier[function_complexity]
 
-    # num_validations = st.number_input("Validation Rules", min_value=1, value=10)
     num_stored_procs = st.number_input("Stored Procedures (basic UPSERT)", min_value=0, value=3)
 
     st.subheader("Validation Checks")
-    checks = {
-        "Not Null / Mandatory fields": st.checkbox("Not Null / Mandatory fields", value=True),
-        "Data type and format validation": st.checkbox("Data type and format validation", value=True),
-        "Range checks": st.checkbox("Range checks", value=True),
-        "Duplicate row detection": st.checkbox("Duplicate row detection", value=False),
-        "Referential integrity checks": st.checkbox("Referential integrity checks", value=False),
-        "Enum / value constraints": st.checkbox("Enum / value constraints", value=False),
-        "Temporal logic": st.checkbox("Temporal logic", value=False),
-        "Pattern matching": st.checkbox("Pattern matching", value=False)
+    validation_times = {
+        "Not Null / Mandatory fields": 60,
+        "Data type and format validation": 75,
+        "Range checks": 60,
+        "Duplicate row detection": 90,
+        "Referential integrity checks": 90,
+        "Enum / value constraints": 60,
+        "Temporal logic": 90,
+        "Pattern matching": 60
     }
+    selected_checks = []
+    total_validation_time_without_ai = 0
+    total_validation_time_with_ai = 0
+    for check, time in validation_times.items():
+        if st.checkbox(check, value=("Mandatory" in check or "format" in check or "Range" in check)):
+            selected_checks.append(check)
+            total_validation_time_without_ai += time
+            total_validation_time_with_ai += round(time * 0.4)  # Assume 60% time saving with AI
 
 st.subheader("⏱️ Estimated Time Comparison")
 col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("**Without AI (mins)**")
-    st.write("Unit Tests:", num_functions * 60)
-    st.write("Validation Logic:", num_validations * 120)
+    st.write("Unit Tests:", num_functions * 90)
+    st.write("Validation Logic:", total_validation_time_without_ai)
     st.write("CI/CD Setup:", 90)
-    st.write("Stored Proc:", num_stored_procs * 40)
+    st.write("Stored Proc:", num_stored_procs * 60)
     st.write("Function App Dev:", num_functions * function_dev_time)
-    st.write("Docs Generation:", 45)
+    st.write("Docs Generation:", 60)
 
 with col2:
     st.markdown("**With AI (mins)**")
-    st.write("Unit Tests:", num_functions * 15)
-    st.write("Validation Logic:", num_validations * 45)
+    st.write("Unit Tests:", num_functions * 20)
+    st.write("Validation Logic:", total_validation_time_with_ai)
     st.write("CI/CD Setup:", 30)
-    st.write("Stored Proc:", num_stored_procs * 10)
-    st.write("Function App Dev:", num_functions * 20)
+    st.write("Stored Proc:", num_stored_procs * 15)
+    st.write("Function App Dev:", num_functions * 25)
     st.write("Docs Generation:", 10)
 
 st.divider()
