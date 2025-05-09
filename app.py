@@ -18,7 +18,7 @@ with st.sidebar:
     }
     function_dev_time = complexity_multiplier[function_complexity]
 
-    num_validations = st.number_input("Validation Rules", min_value=1, value=10)
+    # num_validations = st.number_input("Validation Rules", min_value=1, value=10)
     num_stored_procs = st.number_input("Stored Procedures (basic UPSERT)", min_value=0, value=3)
 
     st.subheader("Validation Checks")
