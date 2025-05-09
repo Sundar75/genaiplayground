@@ -21,20 +21,38 @@ with st.sidebar:
     num_validations = st.number_input("Validation Rules", min_value=1, value=10)
     num_stored_procs = st.number_input("Stored Procedures (basic UPSERT)", min_value=0, value=3)
 
-st.subheader("⏱️ Estimated Time Savings")
-col1, col2, col3 = st.columns(3)
+    st.subheader("Validation Checks")
+    checks = {
+        "Not Null / Mandatory fields": st.checkbox("Not Null / Mandatory fields", value=True),
+        "Data type and format validation": st.checkbox("Data type and format validation", value=True),
+        "Range checks": st.checkbox("Range checks", value=True),
+        "Duplicate row detection": st.checkbox("Duplicate row detection", value=False),
+        "Referential integrity checks": st.checkbox("Referential integrity checks", value=False),
+        "Enum / value constraints": st.checkbox("Enum / value constraints", value=False),
+        "Temporal logic": st.checkbox("Temporal logic", value=False),
+        "Pattern matching": st.checkbox("Pattern matching", value=False)
+    }
+
+st.subheader("⏱️ Estimated Time Comparison")
+col1, col2 = st.columns(2)
 
 with col1:
-    st.metric("🧪 Unit Tests Saved (mins)", value=round(num_functions * (60 - 15)))
-    st.metric("🧼 Validation Logic Saved (mins)", value=round(num_validations * (120 - 45)))
+    st.markdown("**Without AI (mins)**")
+    st.write("Unit Tests:", num_functions * 60)
+    st.write("Validation Logic:", num_validations * 120)
+    st.write("CI/CD Setup:", 90)
+    st.write("Stored Proc:", num_stored_procs * 40)
+    st.write("Function App Dev:", num_functions * function_dev_time)
+    st.write("Docs Generation:", 45)
 
 with col2:
-    st.metric("🛠️ CI/CD Setup Saved (mins)", value=60)
-    st.metric("🧮 Stored Proc Time Saved (mins)", value=round(num_stored_procs * (40 - 10)))
-
-with col3:
-    st.metric("🧱 Function App Dev Time Saved (mins)", value=round(num_functions * (function_dev_time - 20)))
-    st.metric("📚 Docs Generation Saved (mins)", value=35)
+    st.markdown("**With AI (mins)**")
+    st.write("Unit Tests:", num_functions * 15)
+    st.write("Validation Logic:", num_validations * 45)
+    st.write("CI/CD Setup:", 30)
+    st.write("Stored Proc:", num_stored_procs * 10)
+    st.write("Function App Dev:", num_functions * 20)
+    st.write("Docs Generation:", 10)
 
 st.divider()
 
@@ -44,19 +62,6 @@ st.markdown("""
 - Nulls, duplicates, and range checks
 - Business rule transformation into tests
 - Async retry/test boilerplates
-""")
-
-st.subheader("🧪 Data Quality Validation Checks")
-st.markdown("""
-**Common Checks:**
-- Not Null / Mandatory fields
-- Data type and format validation
-- Range checks (e.g. age > 0)
-- Duplicate row detection
-- Referential integrity checks (foreign keys)
-- Enum / value constraints (e.g. status in ['open', 'closed'])
-- Temporal logic (e.g. start_date <= end_date)
-- Pattern matching (e.g. email format)
 """)
 
 st.subheader("🧰 Tools Used")
